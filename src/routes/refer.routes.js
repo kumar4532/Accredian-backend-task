@@ -13,17 +13,12 @@ const isValidEmail = (email) => {
 router.post("/", async (req, res) => {
     try {
         const { referrerName, referrerEmail, refereeName, refereeEmail, referralLink } = req.body
-        console.log(refereeEmail);
-        console.log(refereeName);
-        console.log(referralLink);
-        console.log(referrerEmail);
-        console.log(referrerName);
-        
+
         if (!isValidEmail(referrerEmail) || !isValidEmail(refereeEmail)) {
             return res.status(400).json({ error: "Invalid email format" });
         }
 
-        const referal = await prisma.referral.create({
+        await prisma.referral.create({
             data: {
                 refereeEmail,
                 refereeName,
@@ -33,9 +28,7 @@ router.post("/", async (req, res) => {
             }
         })
 
-        console.log(referal);
-
-        const sendMail = await sendReferralEmail(refereeEmail, refereeName, referralLink, referrerName)
+        await sendReferralEmail(refereeEmail, refereeName, referralLink, referrerName)
 
         console.log(sendMail);
 
